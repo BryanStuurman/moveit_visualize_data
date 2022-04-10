@@ -74,6 +74,15 @@ int main(int argc, char** argv)
 
   ros::NodeHandle nh("~"); // private namespace to load the plugin lib
 
+  //Set log level to DEBUG, because we're gonna need all the help we can get.
+  ROS_INFO("[vis node] setting log level to debug");
+  if( ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug) ) 
+  {
+    ros::console::notifyLoggerLevelsChanged();
+  }
+  ROS_DEBUG("[vis node] debug successful");
+
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///  SETUP
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

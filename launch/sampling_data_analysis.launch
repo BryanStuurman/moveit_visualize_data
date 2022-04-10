@@ -1,5 +1,15 @@
 <launch>
-  <node name="moveit_visualize_data_node" pkg="moveit_visualize_data" type="moveit_visualize_data_node" respawn="false" output="screen">
+    
+    <!--load robot description and planner configs-->
+    <include file="$(find moveit_resources_panda_moveit_config)/launch/move_group.launch" />
+    
+    <!-- load rviz with config -->
+    <include file="$(find moveit_resources_panda_moveit_config)/launch/moveit_rviz.launch">
+      <arg name="rviz_config" value="$(find moveit_resources_panda_moveit_config)/launch/moveit.rviz" />
+    </include>
+
+    <!-- start the vis node -->
+    <node name="moveit_visualize_data_node" pkg="moveit_visualize_data" type="moveit_visualize_data_node" respawn="false" output="screen">
       <param name="/planning_plugin" value="ompl_interface/OMPLPlanner"/>
-  </node>
+    </node>
 </launch>
