@@ -104,15 +104,18 @@ int main(int argc, char** argv)
 
   // Instantiating a RobotModelLoader object, which will look up the robot description on the ROS Paramter server and
   // construct a RobotModel to use
+  ROS_DEBUG("[vis node] Loading robot from param server");
   robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   robot_model::RobotModelPtr robot_model = robot_model_loader.getModel();
 
   /* Create a RobotState and JointModelGroup to keep track of the current robot pose and planning group
    *The JointModelGroup represents the robot model for a particular group*/
+  ROS_DEBUG("[vis node] robotstate and Jointmodelgroup");
   robot_state::RobotStatePtr robot_state(new robot_state::RobotState(robot_model));
   const robot_state::JointModelGroup* joint_model_group_panda = robot_state->getJointModelGroup(PLANNING_GROUP_FOR_ANALYSIS);
 
   // Using the :moveit_core:`RobotModel`, we can construct a :planning_scene:`PlanningScene`
+  ROS_DEBUG("[vis node] construct the plannign scene");
   planning_scene::PlanningScenePtr planning_scene(new planning_scene::PlanningScene(robot_model));
 
 
@@ -122,6 +125,7 @@ int main(int argc, char** argv)
 
   // We will now construct a loader to load a planner, by name.
   // Note that we are using the ROS pluginlib library here.
+  ROS_DEBUG("[vis node] trying to load a planner");
   boost::scoped_ptr<pluginlib::ClassLoader<planning_interface::PlannerManager>> planner_plugin_loader;
   planning_interface::PlannerManagerPtr planner_instance;
   std::string planner_plugin_name;
@@ -163,6 +167,7 @@ int main(int argc, char** argv)
 
   /* The package MoveItVisualTools provides many capabilties for visualizing objects, robots,
    and trajectories in RViz as well as debugging tools such as step-by-step introspection of a script*/
+  ROS_DEBUG("[vis node] init vis tools");
   namespace rvt = rviz_visual_tools;
   moveit_visual_tools::MoveItVisualTools visual_tools(LINK_NAME_VIS);
   visual_tools.enableBatchPublishing();
@@ -182,6 +187,7 @@ int main(int argc, char** argv)
   while(!remote_ctrl->getStop()) {
     
     // use the new function implemented within the ompl_planner_manager.cpp (ompl interface), to visualize the sampled states (which were stored in a file)
+    ROS_DEBUG("[vis node] calling visualize sampled states");
     planner_instance->visualizeSampledStates(planning_scene, PLANNING_GROUP_FOR_ANALYSIS,LINK_NAME_VIS, REFERENCE_FRAME, STATE_SPACE_MODEL, path_samples);
     visual_tools.prompt("Press 'next' in the RvizVisualToolsGui window to visualize the next samples and delete the current markers");
     visual_tools.deleteAllMarkers();
